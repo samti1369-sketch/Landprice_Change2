@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard อัตราการเปลี่ยนแปลงราคาประเมินที่ดิน 66-69 / 70-73</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--navy:#09264a;--navy2:#123b6d;--gold:#c9a24d;--bg:#f3f6fb;--card:#fff;--ink:#132033;--muted:#68778e;--line:#dce5f0;--red:#b91c1c;--orange:#ea580c;--green:#047857;--blue:#2563eb}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:'Sarabun',Tahoma,sans-serif;color:var(--ink)}
+header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:22px 28px;border-bottom:5px solid var(--gold)}
+h1{font-size:25px;margin:0;font-weight:800}.sub{font-size:13px;color:#d8e6f7;margin-top:6px}.wrap{max-width:1560px;margin:0 auto;padding:18px}.status{display:none;border-radius:14px;padding:12px 14px;margin-bottom:14px;font-size:13px;border:1px solid #f3d37d;background:#fff8e6;color:#604300}.status.ok{background:#ecfdf5;border-color:#99f6e4;color:#065f46}.status.err{background:#fef2f2;border-color:#fecaca;color:#7f1d1d}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 28px rgba(17,39,68,.07)}
+.filters{display:grid;grid-template-columns:1.1fr 1.1fr 1.3fr 1fr 1fr .9fr;gap:10px;margin-bottom:14px}.filter{padding:13px}.filter label{display:block;font-size:12px;color:var(--muted);font-weight:700;margin-bottom:5px}.filter select,.filter input{width:100%;border:1px solid var(--line);border-radius:12px;padding:9px 10px;font-family:inherit;font-size:14px;background:#fff}.btn{border:none;border-radius:12px;padding:10px 12px;font-family:inherit;font-weight:800;cursor:pointer;background:var(--navy2);color:#fff}.btn.light{background:#edf3fb;color:#17375f;border:1px solid var(--line)}
+.kpis{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-bottom:14px}.kpi{padding:15px}.kpi .label{font-size:12px;color:var(--muted);font-weight:700}.kpi .value{font-size:27px;color:var(--navy);font-weight:900;margin-top:5px}.kpi .note{font-size:11px;color:#74839a;margin-top:3px;min-height:18px}.main{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}.section{padding:16px}.section h2{margin:0 0 10px;font-size:18px;color:var(--navy);font-weight:800}.section h3{margin:0 0 8px;font-size:15px;color:#17375f}.mapbox{height:670px;border-radius:16px;overflow:hidden;position:relative;background:#e8eef7}.map-note{position:absolute;z-index:600;left:12px;top:12px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;box-shadow:0 7px 20px rgba(0,0,0,.12);font-size:12px;max-width:330px}.legend{position:absolute;z-index:600;right:12px;bottom:12px;background:#fff;border-radius:14px;padding:10px 12px;box-shadow:0 7px 20px rgba(0,0,0,.14);font-size:12px}.grad{width:185px;height:11px;border-radius:999px;background:linear-gradient(90deg,#dbeafe,#60a5fa,#facc15,#fb923c,#dc2626);margin:7px 0}.leaflet-container{font-family:'Sarabun',Tahoma,sans-serif}.leaflet-control-attribution{font-size:10px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.panel{padding:14px}.tablewrap{max-height:430px;overflow:auto;border-radius:12px;border:1px solid #edf2f7}table{width:100%;border-collapse:collapse;font-size:12.5px}th,td{padding:8px;border-bottom:1px solid #edf2f7;text-align:left;vertical-align:top}th{position:sticky;top:0;background:#f8fafc;color:#334155;z-index:1}.num{text-align:right;font-variant-numeric:tabular-nums}.pill{display:inline-block;border-radius:999px;padding:3px 8px;background:#eef2ff;color:#3730a3;font-weight:800;font-size:11px}.region-row{display:grid;grid-template-columns:94px 1fr 58px;gap:8px;align-items:center;margin:8px 0;font-size:13px}.bar{height:11px;background:#edf2f7;border-radius:999px;overflow:hidden}.bar span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#60a5fa,#f59e0b,#dc2626)}.small{font-size:12px;color:#68778e}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}.tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:800;cursor:pointer}.tab.active{background:var(--navy2);border-color:var(--navy2);color:#fff}.diag{font-family:Consolas,monospace;font-size:11px;background:#0f172a;color:#dbeafe;padding:10px;border-radius:12px;white-space:pre-wrap;max-height:160px;overflow:auto}.footer{font-size:11px;color:#718096;margin:16px 0}.highlight{color:var(--red);font-weight:900}.price{font-weight:800;color:#0f355e}
+@media(max-width:1200px){.filters{grid-template-columns:repeat(3,1fr)}.kpis{grid-template-columns:repeat(3,1fr)}.main{grid-template-columns:1fr}.mapbox{height:560px}}@media(max-width:760px){.filters,.kpis,.grid2{grid-template-columns:1fr}.wrap{padding:12px}header{padding:18px}.mapbox{height:480px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Dashboard อัตราการเปลี่ยนแปลงราคาประเมินที่ดิน</h1>
+  <div class="sub">รอบบัญชี พ.ศ. 2566-2569 และ 2570-2573 | แสดงผลรายสำนักงานที่ดิน รายจังหวัด รายภูมิภาค และเฉลี่ยทั้งประเทศ</div>
+</header>
+<div class="wrap">
+  <div id="status" class="status">กำลังโหลดข้อมูล...</div>
+  <div class="filters">
+    <div class="filter card"><label>รอบบัญชีที่ต้องการวิเคราะห์</label><select id="cycle"><option value="66">2566-2569</option><option value="70">2570-2573</option></select></div>
+    <div class="filter card"><label>ภูมิภาค</label><select id="region"><option value="">ทุกภูมิภาค</option></select></div>
+    <div class="filter card"><label>จังหวัด</label><select id="province"><option value="">ทุกจังหวัด</option></select></div>
+    <div class="filter card"><label>สำนักงานที่ดิน</label><select id="office"><option value="">ทุกสำนักงาน</option></select></div>
+    <div class="filter card"><label>จัดอันดับอัตรา</label><select id="rank"><option value="all">ทั้งหมด</option><option value="top10">สูงสุด 10 จังหวัด</option><option value="low10">ต่ำสุด 10 จังหวัด</option></select></div>
+    <div class="filter card"><label>&nbsp;</label><button class="btn" onclick="applyFilters()">แสดงผล</button></div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi card"><div class="label">เฉลี่ยทั้งประเทศ 66-69</div><div id="kpiNat66" class="value">-</div><div class="note">ดึงจากคอลัมน์ K ของชีต</div></div>
+    <div class="kpi card"><div class="label">เฉลี่ยทั้งประเทศ 70-73</div><div id="kpiNat70" class="value">-</div><div class="note">ดึงจากคอลัมน์ L / ค่าที่ต่อจาก K</div></div>
+    <div class="kpi card"><div class="label">จังหวัดอัตราสูงสุด 66-69</div><div id="kpiTop66" class="value">-</div><div id="kpiTop66Note" class="note">-</div></div>
+    <div class="kpi card"><div class="label">จังหวัดอัตราต่ำสุด 66-69</div><div id="kpiLow66" class="value">-</div><div id="kpiLow66Note" class="note">-</div></div>
+    <div class="kpi card"><div class="label">จังหวัดอัตราสูงสุด 70-73</div><div id="kpiTop70" class="value">-</div><div id="kpiTop70Note" class="note">-</div></div>
+    <div class="kpi card"><div class="label">จังหวัดอัตราต่ำสุด 70-73</div><div id="kpiLow70" class="value">-</div><div id="kpiLow70Note" class="note">-</div></div>
+    <div class="kpi card"><div class="label">จำนวนจังหวัด/สำนักงาน</div><div id="kpiCount" class="value">-</div><div class="note">หลังกรองข้อมูล</div></div>
+  </div>
+
+  <div class="main">
+    <div class="section card">
+      <h2>แผนที่ประเทศไทย: Heat Map รายจังหวัด</h2>
+      <div id="map" class="mapbox">
+        <div class="map-note"><b>คำอธิบาย</b><br>สีเข้ม = อัตราการเปลี่ยนแปลงสูงตามรอบบัญชีที่เลือก<br>Bubble สีแดง = จังหวัดที่มีอัตราสูงเมื่อเทียบกับทั้งประเทศ</div>
+        <div class="legend"><b>อัตราการเปลี่ยนแปลง (%)</b><div class="grad"></div><div style="display:flex;justify-content:space-between"><span>ต่ำ</span><span>สูง</span></div></div>
+      </div>
+    </div>
+    <div class="section card">
+      <h2>เฉลี่ยรายภูมิภาค</h2>
+      <canvas id="regionChart" height="190"></canvas>
+      <div id="regionBars" style="margin-top:12px"></div>
+      <div class="grid2">
+        <div class="panel card"><h3>Top จังหวัด</h3><div class="tablewrap"><table id="topTable"></table></div></div>
+        <div class="panel card"><h3>Lowest จังหวัด</h3><div class="tablewrap"><table id="lowTable"></table></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="section card">
+      <h2>รายละเอียดหน่วยที่ดินสูงสุด-ต่ำสุด แยกตามประเภท</h2>
+      <div class="tabs">
+        <button class="tab active" data-cat="road" onclick="setCat('road')">ถนน/ซอย/ทาง</button>
+        <button class="tab" data-cat="village" onclick="setCat('village')">หมู่บ้าน</button>
+        <button class="tab" data-cat="landlocked" onclick="setCat('landlocked')">หน่วยที่ดินไม่มีทางเข้าออก</button>
+      </div>
+      <div class="tablewrap"><table id="detailTable"></table></div>
+      <div class="small" style="margin-top:8px">หมายเหตุ: หน่วยสูงสุด-ต่ำสุดระดับจังหวัดคัดเลือกจากแถวรายจังหวัด หากไม่มีรายละเอียดในแถวจังหวัด ระบบจะแสดงค่าว่างเพื่อไม่ปะปนกับแถวสำนักงานที่ดิน</div>
+    </div>
+    <div class="section card">
+      <h2>รายการข้อมูลตามตัวกรอง</h2>
+      <div class="tablewrap"><table id="officeTable"></table></div>
+    </div>
+  </div>
+
+  <div class="section card" style="margin-top:14px">
+    <h2>ตรวจสอบโครงสร้างข้อมูลที่ใช้</h2>
+    <div class="small">เวอร์ชันนี้กำหนดให้คอลัมน์ K เป็นอัตราการเปลี่ยนแปลงเฉลี่ยทั้งประเทศรอบ 66-69 ตามที่แจ้ง และคัดแยกแถวรายจังหวัดจากชื่อสำนักงานที่ดินที่ขึ้นต้นด้วย “จังหวัด...” หรือชื่อสำนักงานเท่ากับชื่อจังหวัด</div>
+    <div id="diag" class="diag" style="margin-top:10px">-</div>
+  </div>
+
+  <div class="footer">หากข้อมูลไม่แสดงบน GitHub Pages ให้ตรวจสอบว่า Google Sheet เปิดสิทธิ์ Anyone with the link can view และใช้แท็บชื่อ External</div>
+</div>
+<script>
+/* ================== ตั้งค่าคอลัมน์จากโครงสร้าง Google Sheet ==================
+   นับจาก A = 0
+   ตามโครงสร้างใหม่: K คือค่าเฉลี่ยทั้งประเทศ 66-69 (ต้องได้ 8.93)
+*/
+const SHEET_ID = '1fCn52H_nJjojXW2mLKwho5d9z0ItXwsWdzklaqF3jck';
+const SHEET_NAME = 'External';
+const COL = {
+  no:0, province:1, region:2, office:3,
+  unit66:4, officeRate66:5, officeRate70:6,
+  provinceUnits:7, provinceRate66:8, provinceRate70:9,
+  nationalRate66:10, nationalRate70:11,
+  // รายละเอียดราคาประเมินสูงสุด/ต่ำสุด แยกประเภท เริ่มจาก M เป็นต้นไป
+  highRoadName:12, highRoadDepth:13, highRoadOld:14, highRoadNew:15, highRoadOffice:16,
+  highVillageName:17, highVillageOld:18, highVillageNew:19, highVillageOffice:20,
+  highLandlockedName:21, highLandlockedOld:22, highLandlockedNew:23, highLandlockedOffice:24,
+  lowRoadName:25, lowRoadDepth:26, lowRoadOld:27, lowRoadNew:28, lowRoadOffice:29,
+  lowVillageName:30, lowVillageOld:31, lowVillageNew:32, lowVillageOffice:33,
+  lowLandlockedName:34, lowLandlockedOld:35, lowLandlockedNew:36, lowLandlockedOffice:37
+};
+
+const TH_PROVINCES = ['กรุงเทพมหานคร','กระบี่','กาญจนบุรี','กาฬสินธุ์','กำแพงเพชร','ขอนแก่น','จันทบุรี','ฉะเชิงเทรา','ชลบุรี','ชัยนาท','ชัยภูมิ','ชุมพร','เชียงราย','เชียงใหม่','ตรัง','ตราด','ตาก','นครนายก','นครปฐม','นครพนม','นครราชสีมา','นครศรีธรรมราช','นครสวรรค์','นนทบุรี','นราธิวาส','น่าน','บึงกาฬ','บุรีรัมย์','ปทุมธานี','ประจวบคีรีขันธ์','ปราจีนบุรี','ปัตตานี','พระนครศรีอยุธยา','พะเยา','พังงา','พัทลุง','พิจิตร','พิษณุโลก','เพชรบุรี','เพชรบูรณ์','แพร่','ภูเก็ต','มหาสารคาม','มุกดาหาร','แม่ฮ่องสอน','ยโสธร','ยะลา','ร้อยเอ็ด','ระนอง','ระยอง','ราชบุรี','ลพบุรี','ลำปาง','ลำพูน','เลย','ศรีสะเกษ','สกลนคร','สงขลา','สตูล','สมุทรปราการ','สมุทรสงคราม','สมุทรสาคร','สระแก้ว','สระบุรี','สิงห์บุรี','สุโขทัย','สุพรรณบุรี','สุราษฎร์ธานี','สุรินทร์','หนองคาย','หนองบัวลำภู','อ่างทอง','อุดรธานี','อุตรดิตถ์','อุทัยธานี','อุบลราชธานี','อำนาจเจริญ'];
+const PROV_SET = new Set(TH_PROVINCES);
+const SAMPLE = [
+  ['1','กรุงเทพมหานคร','กลาง','กรุงเทพมหานคร',500,1.23,2.76,1276,12.76,15.50,8.93,12.20,'ถนนตัวอย่าง',40,1000000,1800000,'กรุงเทพมหานคร','หมู่บ้านตัวอย่าง',20000,60000,'กรุงเทพมหานคร','ไม่มีทางตัวอย่าง',1000,5000,'กรุงเทพมหานคร','ถนนต่ำตัวอย่าง',40,50000,60000,'กรุงเทพมหานคร','หมู่บ้านต่ำตัวอย่าง',40000,90000,'กรุงเทพมหานคร','ไม่มีทางต่ำตัวอย่าง',2000,3000,'กรุงเทพมหานคร'],
+  ['2','สมุทรปราการ','กลาง','จังหวัดสมุทรปราการ',452,6.80,10.00,452,6.80,10.00,8.93,12.20,'ถนนสุขุมวิท',40,700000,900000,'จังหวัดสมุทรปราการ','หมู่บ้าน A',10000,20000,'จังหวัดสมุทรปราการ','แปลงไม่มีทาง',800,1500,'จังหวัดสมุทรปราการ','ซอยตัวอย่าง',40,20000,30000,'จังหวัดสมุทรปราการ','หมู่บ้าน B',4000,6000,'จังหวัดสมุทรปราการ','แปลงไม่มีทางต่ำ',500,900,'จังหวัดสมุทรปราการ'],
+  ['3','ชลบุรี','ตะวันออก','จังหวัดชลบุรี',1200,47.24,57.24,1200,47.24,57.24,8.93,12.20,'ถนนชายทะเล',50,900000,1400000,'จังหวัดชลบุรี','หมู่บ้านทะเล',30000,55000,'จังหวัดชลบุรี','ที่ดินไม่มีทาง',1000,2500,'จังหวัดชลบุรี','ซอยรอง',40,15000,18000,'จังหวัดชลบุรี','หมู่บ้านรอง',5000,7500,'จังหวัดชลบุรี','ไม่มีทางต่ำ',400,700,'จังหวัดชลบุรี'],
+  ['4','เชียงใหม่','เหนือ','จังหวัดเชียงใหม่',900,9.10,14.80,900,9.10,14.80,8.93,12.20],
+  ['5','ภูเก็ต','ใต้','จังหวัดภูเก็ต',700,18.60,23.40,700,18.60,23.40,8.93,12.20]
+];
+let rawRows=[], allRows=[], provinceRows=[], officeRows=[], filteredProvinces=[], activeCat='road', map, geoLayer, bubbleLayer, regionChart;
+
+function showStatus(msg,type=''){const el=document.getElementById('status');el.style.display='block';el.className='status '+type;el.innerHTML=msg;}
+function cell(row,i){return (row && row[i]!==undefined && row[i]!==null)?String(row[i]).trim():''}
+function num(v){if(v===null||v===undefined)return null;let s=String(v).replace(/,/g,'').replace(/%/g,'').trim();if(!s)return null;let n=parseFloat(s);return Number.isFinite(n)?n:null}
+function pct(v){let n=num(v);return n===null?'-':n.toFixed(2)+'%'}
+function fmt(v){let n=num(v);return n===null?(v||'-'):n.toLocaleString('th-TH',{maximumFractionDigits:2})}
+function normProv(s){s=String(s||'').replace(/^จังหวัด/,'').replace(/\s+/g,'').trim(); if(s==='กรุงเทพฯ'||s==='กทม')return 'กรุงเทพมหานคร'; return s;}
+function isDataRow(r){return PROV_SET.has(normProv(cell(r,COL.province))) && cell(r,COL.region) && cell(r,COL.office);}
+function isProvinceLevel(r){const p=normProv(cell(r,COL.province)); let o=cell(r,COL.office).replace(/\s+/g,'').trim(); let oo=o.replace(/^จังหวัด/,''); return p && (oo===p || o.startsWith('จังหวัด') || !o.includes('สาขา')) && num(cell(r,COL.provinceRate66))!==null;}
+function rowObj(r){let p=normProv(cell(r,COL.province));let isProv=isProvinceLevel(r);return {raw:r,province:p,region:cell(r,COL.region),office:cell(r,COL.office),level:isProv?'province':'office',unit66:num(cell(r,COL.unit66)),officeRate66:num(cell(r,COL.officeRate66)),officeRate70:num(cell(r,COL.officeRate70)),provinceUnits:num(cell(r,COL.provinceUnits)),provinceRate66:num(cell(r,COL.provinceRate66)),provinceRate70:num(cell(r,COL.provinceRate70)),nationalRate66:num(cell(r,COL.nationalRate66)),nationalRate70:num(cell(r,COL.nationalRate70))};}
+function rateOf(o){const c=document.getElementById('cycle').value; return c==='66'?(o.provinceRate66??o.officeRate66):(o.provinceRate70??o.officeRate70);}
+function officeRateOf(o){const c=document.getElementById('cycle').value; return c==='66'?o.officeRate66:o.officeRate70;}
+
+function loadSheet(){
+  showStatus('กำลังโหลดข้อมูลจาก Google Sheet...', '');
+  const cb='__gvizCb_'+Date.now(); window[cb]=function(resp){try{handleGviz(resp); delete window[cb];}catch(e){console.error(e); useSample('อ่านข้อมูลจาก Google Sheet ไม่สำเร็จ: '+e.message);}};
+  const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?sheet=${encodeURIComponent(SHEET_NAME)}&headers=0&tqx=out:json;responseHandler:${cb}`;
+  const s=document.createElement('script'); s.src=url; s.onerror=()=>useSample('โหลด Google Sheet ไม่สำเร็จ จึงแสดงข้อมูลตัวอย่างสำรอง'); document.body.appendChild(s);
+  setTimeout(()=>{if(!rawRows.length) useSample('โหลด Google Sheet นานผิดปกติ จึงแสดงข้อมูลตัวอย่างสำรองก่อน');},9000);
+}
+function handleGviz(resp){
+  const rows=(resp.table.rows||[]).map(r=>(r.c||[]).map(c=>c?(c.v!==undefined?c.v:c.f):''));
+  rawRows=rows.filter(r=>r.some(x=>String(x||'').trim()!==''));
+  prepareData(false);
+}
+function useSample(msg){ if(rawRows.length) return; rawRows=SAMPLE; prepareData(true,msg); }
+function prepareData(isSample=false,msg=''){
+  allRows=rawRows.filter(isDataRow).map(rowObj);
+  provinceRows=allRows.filter(x=>x.level==='province');
+  officeRows=allRows.filter(x=>x.level==='office');
+  if(!provinceRows.length){ // fallback: group from offices if sheet has no province rows
+    const m={}; officeRows.forEach(o=>{if(!m[o.province])m[o.province]={...o,level:'province',provinceRate66:null,provinceRate70:null,provinceUnits:0,count:0}; let g=m[o.province]; g.provinceUnits+=(o.unit66||0); g.provinceRate66=(g.provinceRate66||0)+(o.officeRate66||0); g.provinceRate70=(g.provinceRate70||0)+(o.officeRate70||0); g.count++;});
+    provinceRows=Object.values(m).map(g=>({...g,provinceRate66:g.count?g.provinceRate66/g.count:null,provinceRate70:g.count?g.provinceRate70/g.count:null}));
+  }
+  buildFilters(); initMap(); applyFilters();
+  const nat66 = getNational('66'); const marker = Math.abs((nat66??0)-8.93)<0.01 ? 'ถูกต้องตามคอลัมน์ K' : 'โปรดตรวจสอบคอลัมน์ K';
+  showStatus((isSample?'แสดงข้อมูลตัวอย่างสำรอง: ':'โหลดข้อมูลสำเร็จ: ')+(msg||'')+` พบข้อมูล ${allRows.length} แถว | รายจังหวัด ${provinceRows.length} แถว | รายสำนักงาน ${officeRows.length} แถว | ค่าเฉลี่ยทั้งประเทศ 66-69 = ${pct(nat66)} (${marker})`, isSample?'':'ok');
+}
+function getNational(cycle){
+  const key=cycle==='66'?'nationalRate66':'nationalRate70';
+  let vals=provinceRows.map(x=>x[key]).filter(v=>v!==null);
+  if(!vals.length) vals=allRows.map(x=>x[key]).filter(v=>v!==null);
+  // โดยปกติค่านี้ซ้ำกันทุกแถวจังหวัด จึงใช้ค่าที่พบแรกจากคอลัมน์ K/L ไม่คำนวณเฉลี่ยใหม่
+  return vals.length?vals[0]:null;
+}
+function buildFilters(){
+  const regs=[...new Set(provinceRows.map(x=>x.region).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'th'));
+  const provs=[...new Set(provinceRows.map(x=>x.province).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'th'));
+  setOptions('region',regs,'ทุกภูมิภาค'); setOptions('province',provs,'ทุกจังหวัด'); refreshOfficeOptions();
+  document.getElementById('region').onchange=()=>{refreshProvinceByRegion();refreshOfficeOptions();};
+  document.getElementById('province').onchange=()=>refreshOfficeOptions();
+}
+function setOptions(id,arr,all){const sel=document.getElementById(id); const old=sel.value; sel.innerHTML=`<option value="">${all}</option>`+arr.map(x=>`<option value="${x}">${x}</option>`).join(''); if(arr.includes(old))sel.value=old;}
+function refreshProvinceByRegion(){const r=document.getElementById('region').value; const arr=[...new Set(provinceRows.filter(x=>!r||x.region===r).map(x=>x.province))].sort((a,b)=>a.localeCompare(b,'th')); setOptions('province',arr,'ทุกจังหวัด');}
+function refreshOfficeOptions(){const r=document.getElementById('region').value,p=document.getElementById('province').value; const arr=[...new Set(allRows.filter(x=>(!r||x.region===r)&&(!p||x.province===p)).map(x=>x.office).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'th')); setOptions('office',arr,'ทุกสำนักงาน');}
+
+function applyFilters(){
+  const r=document.getElementById('region').value,p=document.getElementById('province').value,o=document.getElementById('office').value,rank=document.getElementById('rank').value;
+  let prov=provinceRows.filter(x=>(!r||x.region===r)&&(!p||x.province===p)&&(!o||x.office===o));
+  if(o && !prov.length){ const offices=officeRows.filter(x=>(!r||x.region===r)&&(!p||x.province===p)&&(!o||x.office===o)); const ps=new Set(offices.map(x=>x.province)); prov=provinceRows.filter(x=>ps.has(x.province)); }
+  prov=prov.filter(x=>rateOf(x)!==null);
+  if(rank==='top10') prov=[...prov].sort((a,b)=>rateOf(b)-rateOf(a)).slice(0,10);
+  if(rank==='low10') prov=[...prov].sort((a,b)=>rateOf(a)-rateOf(b)).slice(0,10);
+  filteredProvinces=prov;
+  renderKpis(prov); renderRegion(prov); renderTables(prov); renderDetails(prov); updateMap(prov);
+  renderDiag();
+}
+function renderKpis(prov){
+  document.getElementById('kpiNat66').textContent=pct(getNational('66'));
+  document.getElementById('kpiNat70').textContent=pct(getNational('70'));
+  const with66=prov.filter(x=>x.provinceRate66!==null).sort((a,b)=>a.provinceRate66-b.provinceRate66);
+  const with70=prov.filter(x=>x.provinceRate70!==null).sort((a,b)=>a.provinceRate70-b.provinceRate70);
+  const low66=with66[0], top66=with66[with66.length-1];
+  const low70=with70[0], top70=with70[with70.length-1];
+  document.getElementById('kpiTop66').textContent=top66?top66.province:'-';
+  document.getElementById('kpiTop66Note').textContent=top66?pct(top66.provinceRate66):'-';
+  document.getElementById('kpiLow66').textContent=low66?low66.province:'-';
+  document.getElementById('kpiLow66Note').textContent=low66?pct(low66.provinceRate66):'-';
+  document.getElementById('kpiTop70').textContent=top70?top70.province:'-';
+  document.getElementById('kpiTop70Note').textContent=top70?pct(top70.provinceRate70):'-';
+  document.getElementById('kpiLow70').textContent=low70?low70.province:'-';
+  document.getElementById('kpiLow70Note').textContent=low70?pct(low70.provinceRate70):'-';
+  const offices=officeRows.filter(x=>prov.some(p=>p.province===x.province));
+  document.getElementById('kpiCount').textContent=`${prov.length}/${offices.length}`;
+}
+function renderRegion(prov){
+  const groups={}; prov.forEach(x=>{if(!groups[x.region])groups[x.region]=[]; groups[x.region].push(rateOf(x));});
+  const data=Object.entries(groups).map(([k,a])=>({region:k,avg:a.reduce((s,v)=>s+v,0)/a.length,count:a.length})).sort((a,b)=>b.avg-a.avg);
+  const max=Math.max(1,...data.map(x=>x.avg));
+  document.getElementById('regionBars').innerHTML=data.map(x=>`<div class="region-row"><b>${x.region}</b><div class="bar"><span style="width:${Math.max(2,x.avg/max*100)}%"></span></div><div class="num">${pct(x.avg)}</div></div>`).join('')||'<div class="small">ไม่มีข้อมูล</div>';
+  const ctx=document.getElementById('regionChart'); if(regionChart) regionChart.destroy();
+  regionChart=new Chart(ctx,{type:'bar',data:{labels:data.map(x=>x.region),datasets:[{label:'เฉลี่ยรายภูมิภาค (%)',data:data.map(x=>x.avg)}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v+'%'}}}}});
+}
+function tableHTML(headers, rows){return '<thead><tr>'+headers.map(h=>`<th>${h}</th>`).join('')+'</tr></thead><tbody>'+rows.join('')+'</tbody>';}
+function renderTables(prov){
+  const top=[...prov].sort((a,b)=>rateOf(b)-rateOf(a)).slice(0,10), low=[...prov].sort((a,b)=>rateOf(a)-rateOf(b)).slice(0,10);
+  const row=x=>`<tr><td>${x.province}</td><td>${x.region}</td><td class="num"><span class="pill">${pct(rateOf(x))}</span></td></tr>`;
+  document.getElementById('topTable').innerHTML=tableHTML(['จังหวัด','ภูมิภาค','อัตรา'],top.map(row));
+  document.getElementById('lowTable').innerHTML=tableHTML(['จังหวัด','ภูมิภาค','อัตรา'],low.map(row));
+  const r=document.getElementById('region').value,p=document.getElementById('province').value,o=document.getElementById('office').value;
+  const offices=allRows.filter(x=>(!r||x.region===r)&&(!p||x.province===p)&&(!o||x.office===o));
+  document.getElementById('officeTable').innerHTML=tableHTML(['ระดับ','จังหวัด','สำนักงานที่ดิน','66-69','70-73'], offices.map(x=>`<tr><td>${x.level==='province'?'รายจังหวัด':'รายสำนักงาน'}</td><td>${x.province}</td><td>${x.office}</td><td class="num">${pct(x.level==='province'?x.provinceRate66:x.officeRate66)}</td><td class="num">${pct(x.level==='province'?x.provinceRate70:x.officeRate70)}</td></tr>`));
+}
+function setCat(cat){activeCat=cat; document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.cat===cat)); renderDetails(filteredProvinces);}
+function pickDetail(row,kind,cat){
+  const r=row.raw; const p={
+    high:{road:[COL.highRoadName,COL.highRoadDepth,COL.highRoadOld,COL.highRoadNew,COL.highRoadOffice],village:[COL.highVillageName,null,COL.highVillageOld,COL.highVillageNew,COL.highVillageOffice],landlocked:[COL.highLandlockedName,null,COL.highLandlockedOld,COL.highLandlockedNew,COL.highLandlockedOffice]},
+    low:{road:[COL.lowRoadName,COL.lowRoadDepth,COL.lowRoadOld,COL.lowRoadNew,COL.lowRoadOffice],village:[COL.lowVillageName,null,COL.lowVillageOld,COL.lowVillageNew,COL.lowVillageOffice],landlocked:[COL.lowLandlockedName,null,COL.lowLandlockedOld,COL.lowLandlockedNew,COL.lowLandlockedOffice]}
+  }[kind][cat];
+  return {name:cell(r,p[0]),depth:p[1]===null?'':cell(r,p[1]),old:cell(r,p[2]),newv:cell(r,p[3]),office:cell(r,p[4])};
+}
+function renderDetails(prov){
+  const rows=[]; prov.forEach(x=>{const hi=pickDetail(x,'high',activeCat), lo=pickDetail(x,'low',activeCat); rows.push(`<tr><td>${x.province}</td><td><b>สูงสุด</b><br>${hi.name||'-'}<br><span class="small">${hi.office||''}</span></td><td>${hi.depth||'-'}</td><td class="num price">${fmt(hi.old)}</td><td class="num price">${fmt(hi.newv)}</td><td><b>ต่ำสุด</b><br>${lo.name||'-'}<br><span class="small">${lo.office||''}</span></td><td>${lo.depth||'-'}</td><td class="num price">${fmt(lo.old)}</td><td class="num price">${fmt(lo.newv)}</td></tr>`);});
+  document.getElementById('detailTable').innerHTML=tableHTML(['จังหวัด','หน่วยสูงสุด','ลึก','ราคาเดิม','ราคาใหม่','หน่วยต่ำสุด','ลึก','ราคาเดิม','ราคาใหม่'],rows);
+}
+function renderDiag(){
+  const nat66=getNational('66'), nat70=getNational('70');
+  const sample=provinceRows.slice(0,5).map(x=>`${x.province} | ${x.office} | I=${cell(x.raw,COL.provinceRate66)} J=${cell(x.raw,COL.provinceRate70)} K=${cell(x.raw,COL.nationalRate66)} L=${cell(x.raw,COL.nationalRate70)}`).join('\n');
+  document.getElementById('diag').textContent=`Rows(raw/data/province/office): ${rawRows.length}/${allRows.length}/${provinceRows.length}/${officeRows.length}\nNational K(66-69): ${nat66} | National L(70-73): ${nat70}\nตัวอย่างแถวรายจังหวัด:\n${sample}`;
+}
+
+function initMap(){
+  if(map) return;
+  map=L.map('map',{zoomControl:true,scrollWheelZoom:false}).setView([13.2,101.1],5.6);
+  L.tileLayer('',{attribution:''}).addTo(map);
+  bubbleLayer=L.layerGroup().addTo(map);
+  const urls=[
+    'https://raw.githubusercontent.com/apisit/thailand.json/master/thailandWithName.json',
+    'https://raw.githubusercontent.com/apisit/thailand.json/master/thailand.json',
+    'https://raw.githubusercontent.com/thaich8/thailand-geojson/master/thailand-provinces.geojson',
+    'https://raw.githubusercontent.com/strapi/awesome-thailand/master/geojson/provinces.geojson'
+  ];
+  loadGeo(urls,0);
+}
+function loadGeo(urls,i){ if(i>=urls.length){document.querySelector('.map-note').innerHTML+='<br><span class="highlight">โหลดขอบเขตจังหวัดไม่ได้ แต่ข้อมูลตารางยังใช้ได้</span>';return;} fetch(urls[i]).then(r=>{if(!r.ok)throw new Error('bad');return r.json()}).then(g=>{geoLayer=L.geoJSON(g,{style:featureStyle,onEachFeature:onEachProvince}).addTo(map); try{map.fitBounds(geoLayer.getBounds(),{padding:[10,10]});}catch(e){} updateMap(filteredProvinces);}).catch(()=>loadGeo(urls,i+1)); }
+function featureName(f){const p=f.properties||{}; const keys=['name_th','NAME_TH','name','NAME_1','PROV_NAMT','PROV_NAME','province','ADM1_TH','NL_NAME_1']; for(const k of keys){if(p[k]){let s=String(p[k]); s=s.replace('Changwat ','').replace('Krung Thep Maha Nakhon','กรุงเทพมหานคร'); return normProv(s);}} return '';}
+function colorScale(v,min,max){ if(v===null||v===undefined) return '#eef2f7'; const t=max>min?(v-min)/(max-min):0.5; if(t<.2)return '#dbeafe'; if(t<.4)return '#60a5fa'; if(t<.6)return '#facc15'; if(t<.8)return '#fb923c'; return '#dc2626'; }
+function featureStyle(f){ const p=provinceMap()[featureName(f)]; const vals=filteredProvinces.map(rateOf).filter(v=>v!==null); const min=Math.min(...vals),max=Math.max(...vals); const v=p?rateOf(p):null; return {color:'#fff',weight:.8,fillOpacity:p?.selected===false?.25:.78,fillColor:colorScale(v,min,max)}; }
+function onEachProvince(feature,layer){ layer.on({mouseover:e=>{const name=featureName(feature), p=provinceMap()[name]; layer.setStyle({weight:2,color:'#111827'}); layer.bindTooltip(`<b>${name||'ไม่ทราบจังหวัด'}</b><br>อัตรา: ${p?pct(rateOf(p)):'ไม่มีข้อมูล'}`,{sticky:true}).openTooltip();},mouseout:e=>{if(geoLayer)geoLayer.resetStyle(layer);},click:e=>{const name=featureName(feature); if(name){document.getElementById('province').value=name; applyFilters();}}}); }
+function provinceMap(){const m={}; provinceRows.forEach(x=>m[x.province]={...x,selected:filteredProvinces.some(p=>p.province===x.province)}); return m;}
+function updateMap(prov){ if(!map)return; if(geoLayer) geoLayer.setStyle(featureStyle); if(bubbleLayer) bubbleLayer.clearLayers(); if(!geoLayer || !prov.length) return; const vals=prov.map(rateOf).filter(v=>v!==null); const avg=vals.reduce((a,b)=>a+b,0)/Math.max(1,vals.length), max=Math.max(...vals);
+  geoLayer.eachLayer(layer=>{const name=featureName(layer.feature); const p=prov.find(x=>x.province===name); if(p && rateOf(p)>=avg && rateOf(p)>0){const c=layer.getBounds().getCenter(); const r=6+Math.min(24,(rateOf(p)/Math.max(1,max))*24); L.circleMarker(c,{radius:r,color:'#7f1d1d',weight:1,fillColor:'#dc2626',fillOpacity:.33}).bindTooltip(`<b>${name}</b><br>${pct(rateOf(p))}`).addTo(bubbleLayer);}});
+}
+
+loadSheet();
+</script>
+</body>
+</html>
